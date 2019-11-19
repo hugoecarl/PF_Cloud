@@ -21,4 +21,4 @@ collection.insert_one(data)
 collection.insert_one(data1)
 
 for i in collection.find({}):
-    print("dados inseridos - " +i)
+    print(i)
