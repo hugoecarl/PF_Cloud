@@ -67,7 +67,7 @@ class TaskAPI(Resource):
         super(TaskAPI, self).__init__()
 
     def get(self, id):
-        task = [task for task in tasks if task['id'] == id]
+        task = [task for task in collection.find({}) if task['id'] == id]
         if len(task) == 0:
             abort(404)
         return {'task': marshal(task[0], task_fields)}
@@ -85,10 +85,11 @@ class TaskAPI(Resource):
         return {'task': marshal(task, task_fields)}
 
     def delete(self, id):
-        task = [task for task in tasks if task['id'] == id]
+        task = [task for task in collection.find({}) if task['id'] == id]
         if len(task) == 0:
             abort(404)
         tasks.remove(task[0])
+        collection.remove({'id':id})
         return {'result': True}
 
 
