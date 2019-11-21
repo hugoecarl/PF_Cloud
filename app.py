@@ -1,23 +1,20 @@
 from flask import Flask, jsonify, abort, make_response
 from flask_restful import Api, Resource, reqparse, fields, marshal
+import pymongo
 
 app = Flask(__name__, static_url_path="")
 api = Api(app)
 
-tasks = [
-    {
-        'id': 1,
-        'title': u'Hugo Carl',
-        'description': u'Programa Python',
-        'done': False
-    },
-    {
-        'id': 2,
-        'title': u'Rafael R',
-        'description': u'Banco de dados SQL',
-        'done': False
-    }
-]
+tasks = []
+
+connection = pymongo.MongoClient('35.175.190.82', 27017)
+
+database = connection['mydb_1']
+
+collection = database['mycol_1']
+
+for i in collection.find({}):
+    tasks.append(i)
 
 task_fields = {
     'id' : fields.Integer,
