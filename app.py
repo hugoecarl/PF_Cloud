@@ -21,7 +21,7 @@ task_fields = {
     'title': fields.String,
     'description': fields.String,
     'done': fields.Boolean
-    #'uri': fields.Url('task')
+
 }
 
 
@@ -43,7 +43,7 @@ class TaskListAPI(Resource):
         super(TaskListAPI, self).__init__()
 
     def get(self):
-        return {'tasks': [marshal(task, task_fields) for task in tasks]}
+        return {'tasks': [marshal(task, task_fields) for task in collection.find({})]}
 
     def post(self):
         args = self.reqparse.parse_args()
@@ -54,6 +54,7 @@ class TaskListAPI(Resource):
             'done': False
         }
         tasks.append(task)
+        collection.insert_one(task)
         return {'task': marshal(task, task_fields)}, 201
 
 
@@ -72,7 +73,7 @@ class TaskAPI(Resource):
         return {'task': marshal(task[0], task_fields)}
 
     def put(self, id):
-        task = [task for task in tasks if task['id'] == id]
+        task = [task for task in collection.find({}) if task['id'] == id]
         if len(task) == 0:
             abort(404)
         task = task[0]
@@ -80,6 +81,7 @@ class TaskAPI(Resource):
         for k, v in args.items():
             if v is not None:
                 task[k] = v
+                collection.update({'id' : id},{'$set' : {k : v}})
         return {'task': marshal(task, task_fields)}
 
     def delete(self, id):
