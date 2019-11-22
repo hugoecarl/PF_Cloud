@@ -33,19 +33,39 @@ class TaskListAPI(Resource):
         con = requests.get(connection+"tasks").json()
         return jsonify(con)
     
-    # def post(self):
-    #     args = self.reqparse.parse_args()
-    #     task = {
-    #         'id': tasks[-1]['id'] + 1 if len(tasks) > 0 else 1,
-    #         'title': args['title'],
-    #         'description': args['description'],
-    #         'done': False
-    #     }
-    #     tasks.append(task)
-    #     return {'task': marshal(task, task_fields)}, 201
+    def post(self):
+        args = self.reqparse.parse_args()
+        con = requests.post(connection+"tasks", json = args).json()
+        return con
+
+
+class TaskAPI(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('title', type=str, location='json')
+        self.reqparse.add_argument('description', type=str, location='json')
+        self.reqparse.add_argument('done', type=bool, location='json')
+        super(TaskAPI, self).__init__()
+
+    def get(self, id):
+        con = requests.get(connection+"tasks/"+str(id)).json()
+        return jsonify(con)
+
+
+    def put(self, id):
+        args = self.reqparse.parse_args()
+        con = requests.put(connection+"tasks/"+str(id), json = args).json()
+        return jsonify(con)
+    
+    def delete(self, id):
+        con = requests.delete(connection+"tasks/"+str(id)).json()
+        return {'result': True}
+
 
 api.add_resource(TaskListAPI, '/tasks', endpoint='tasks')
+api.add_resource(TaskAPI, '/tasks/<int:id>', endpoint='task')
 api.add_resource(HealthCheck, '/healthcheck/', endpoint='healthcheck')
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)
