@@ -1,8 +1,9 @@
 from flask import Flask, jsonify, abort, make_response
 from flask_restful import Api, Resource, reqparse, fields, marshal
 import requests
+import json
 
-connection = "http://3.94.152.209:5000/"
+connection = "http://34.227.115.205:5000/"
 
 app = Flask(__name__, static_url_path="")
 api = Api(app)
@@ -29,8 +30,9 @@ class TaskListAPI(Resource):
         super(TaskListAPI, self).__init__()
 
     def get(self):
-        return {'tasks': [marshal(task, task_fields) for task in requests.get(connection+"tasks/")]}
-
+        con = requests.get(connection+"tasks").json()
+        return jsonify(con)
+    
     # def post(self):
     #     args = self.reqparse.parse_args()
     #     task = {
