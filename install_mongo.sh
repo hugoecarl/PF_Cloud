@@ -6,5 +6,4 @@ sudo apt-get update
 sudo apt-get install -y mongodb-org
 pip3 install pymongo
 sudo mkdir -p /data/db
-screen -S janela
 sudo mongod --bind_ip 0.0.0.0 -v
