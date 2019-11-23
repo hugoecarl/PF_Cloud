@@ -1,3 +1,4 @@
+#!/bin/bash
 sudo apt update
 sudo apt install python3-pip -y
 wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
