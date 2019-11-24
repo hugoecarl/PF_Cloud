@@ -2,8 +2,10 @@ from flask import Flask, jsonify, abort, make_response
 from flask_restful import Api, Resource, reqparse, fields, marshal
 import requests
 import json
+import os 
 
-connection = "http://34.227.115.205:5000/"
+a = os.environ['MYVAR']
+connection = "http://"+a+":5000/"
 
 app = Flask(__name__, static_url_path="")
 api = Api(app)
